@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch Web App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #121212;
+      color: #fff;
+    }
+
+    .container {
+      margin-top: 100px;
+    }
+
+    #display {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    .buttons button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    #laps {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    #laps li {
+      margin: 5px 0;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Stopwatch</h1>
+    <div id="display">00:00:00</div>
+    <div class="buttons">
+      <button onclick="startStop()">Start</button>
+      <button onclick="pause()">Pause</button>
+      <button onclick="reset()">Reset</button>
+      <button onclick="lap()">Lap</button>
+    </div>
+    <ul id="laps"></ul>
+  </div>
+
+  <script>
+    let startTime = 0, elapsedTime = 0, timerInterval;
+
+    function timeToString(time) {
+      let hrs = Math.floor(time / 3600000);
+      let mins = Math.floor((time % 3600000) / 60000);
+      let secs = Math.floor((time % 60000) / 1000);
+
+      return (
+        (hrs < 10 ? "0" : "") + hrs + ":" +
+        (mins < 10 ? "0" : "") + mins + ":" +
+        (secs < 10 ? "0" : "") + secs
+      );
+    }
+
+    function print(txt) {
+      document.getElementById("display").innerHTML = txt;
+    }
+
+    function startStop() {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(function () {
+        elapsedTime = Date.now() - startTime;
+        print(timeToString(elapsedTime));
+      }, 1000);
+    }
+
+    function pause() {
+      clearInterval(timerInterval);
+    }
+
+    function reset() {
+      clearInterval(timerInterval);
+      print("00:00:00");
+      elapsedTime = 0;
+      document.getElementById("laps").innerHTML = "";
+    }
+
+    function lap() {
+      let lapTime = timeToString(elapsedTime);
+      let li = document.createElement("li");
+      li.innerText = "Lap: " + lapTime;
+      document.getElementById("laps").appendChild(li);
+    }
+  </script>
+</body>
+</html>
